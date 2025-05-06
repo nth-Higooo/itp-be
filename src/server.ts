@@ -1,30 +1,30 @@
 import { createServer } from "http";
 import "reflect-metadata";
 import { Server } from "socket.io";
+import "dotenv/config";
 
 import application from "./application";
 import Logger from "./utils/logger";
 import config from "./configuration";
 import { AppDataSource } from "./database/data-source";
 import { createTransport } from "nodemailer";
-import configuration from "./configuration";
-import "dotenv/config";
+
 const { instance: app } = application;
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: configuration.clientSite,
+    origin: config.clientSite,
     credentials: true,
   },
 });
 
 io.on("connection", (socket) => {
   app.locals.socket = socket;
+  Logger.info(`Socket.IO connected with ID: ${socket.id}`);
 
-  Logger.info(`Socket.IO start with id: ${socket.id}`);
   socket.on("disconnect", (reason) => {
-    Logger.info(`Socket.IO end by ${reason}`);
+    Logger.info(`Socket.IO disconnected due to: ${reason}`);
   });
 });
 
@@ -32,9 +32,13 @@ AppDataSource.initialize()
   .then(() => {
     Logger.info("✅ Database connected successfully!");
 
-    // Start the server after DB is ready
-    httpServer.listen(config.port, () => {
-      Logger.info(`🚀 Server is running on http://localhost:${config.port}`);
+    // ✅ Ensure dynamic PORT for Render
+    const PORT = process.env.PORT
+      ? parseInt(process.env.PORT, 10)
+      : config.port || 3000;
+
+    httpServer.listen(PORT, () => {
+      Logger.info(`🚀 Server is running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
@@ -53,4 +57,5 @@ const nodeMailer = createTransport({
     pass: config.smtpPassword,
   },
 });
+
 app.locals.nodeMailer = nodeMailer;
