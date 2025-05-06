@@ -8,7 +8,7 @@
     "build": "npx tsc",
     "dev": "nodemon src/server.ts",
     "serve": "cd dist && node server.js",
-    "db:up": "npx typeorm-ts-node-commonjs migration:run -d ./src/database/data-source.ts",
+    "db:up": "npx typeorm-ts-node-commonjs migration:run -d ./dist/database/data-source.js",
     "db:down": "npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts"
   },
   "keywords": [],
