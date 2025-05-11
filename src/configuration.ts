@@ -31,7 +31,7 @@ class Config implements ConfigValues {
   dbPort = parseInt(process.env.DB_PORT || "5432", 10);
   dbUsername = process.env.DB_USERNAME || "postgres";
   dbPassword = process.env.DB_PASSWORD || "postgres";
-  dbDatabase = process.env.DB_DATABASE || "hrms";
+  dbDatabase = process.env.DB_DATABASE || "itp";
   dbSynchronize = process.env.DB_SYNCHRONIZE
     ? process.env.DB_SYNCHRONIZE === "true"
     : true;

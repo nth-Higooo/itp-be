@@ -28,27 +28,6 @@ import { getRolesAndPermissionsByUser } from "./database/repositories/auth.repos
 import { IAuthorize, IUserPermission } from "./utils/interfaces";
 import { initFolder } from "./utils/file";
 import { initCronModule } from "./cron";
-import swaggerUi from "swagger-ui-express";
-import swaggerJsdoc from "swagger-jsdoc";
-
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "hrms-backend API",
-      version: "1.0.0",
-      description: "API Documentation",
-    },
-    servers: [
-      {
-        url: "http://localhost:4000", // Replace with your server URL
-      },
-    ],
-  },
-  apis: ["./src/controllers/*.ts"], // Path to your route files
-};
-
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 class Application {
   private readonly _instance: ExApplication;
@@ -70,24 +49,15 @@ class Application {
       })
     );
     this._instance.use(cookieParser());
-    this._instance.use(
-      "/api-docs",
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerSpec)
-    );
     this.middleware();
     this.registerRouters();
     this.handleErrors();
-    // this._instance.use(
-    //   "/static/image",
-    //   express.static(config.upload_image_dir)
-    // );
-    // this._instance.use("/static/pdfs", express.static(config.upload_pdf_dir));
-    // initCronModule();
-
-    this._instance.use("/", (req: Request, res: Response) => {
-      res.send("Hello World! Your server is running.");
-    });
+    this._instance.use(
+      "/static/image",
+      express.static(config.upload_image_dir)
+    );
+    this._instance.use("/static/pdfs", express.static(config.upload_pdf_dir));
+    initCronModule();
   }
 
   private middleware(): void {
