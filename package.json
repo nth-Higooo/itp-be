@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "npx tsc copyfiles -u 1 src/templates/**/* dist/templates",
+    "build": "npx tsc && npm run copy-templates",
     "dev": "nodemon src/server.ts",
     "serve": "cd dist && node server.js",
     "db:up": "npx typeorm-ts-node-commonjs migration:run -d ./dist/database/data-source.js",
-    "db:down": "npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts"
+    "db:down": "npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts",
+    "copy-templates": "cpx \"src/templates/**/*\" dist/templates"
   },
   "keywords": [],
   "author": "",
@@ -58,6 +59,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "copyfiles": "^2.4.1",
+    "cpx": "^1.5.0",
     "cross-env": "^7.0.3",
     "nodemon": "^3.1.3",
     "ts-node": "^10.9.2",
