@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "npx tsc copyfiles -u 1 src/templates/**/* dist/templates",
+    "build": "tsc && copyfiles -u 1 src/templates/**/* dist/templates",
     "dev": "nodemon src/server.ts",
     "serve": "cd dist && node server.js",
     "db:up": "npx typeorm-ts-node-commonjs migration:run -d ./dist/database/data-source.js",
