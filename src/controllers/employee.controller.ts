@@ -1559,7 +1559,7 @@ export default class EmployeeController {
           emails: admins!.map((admin: User) => admin.email).join(","),
           template: "RecommendedRoles",
           data: {
-            subject: "[WATA-SOFTWARE] Set recommended roles for employee",
+            subject: "[ITP-VNU] Set recommended roles for employee",
             urlSetRole,
           },
         });
@@ -2107,7 +2107,7 @@ export default class EmployeeController {
           emails: admins!.map((admin: User) => admin.email).join(","),
           template: "RecommendedRoles",
           data: {
-            subject: "[WATA-SOFTWARE] Set recommended roles for employee",
+            subject: "[ITP-VNU] Set recommended roles for employee",
             urlSetRole,
           },
         });

@@ -23,7 +23,7 @@ export const sendMail = async ({
   const html = mustache.render(templateHtml, data);
 
   const info = await nodeMailer.sendMail({
-    from: `"ERP Wata Software" <${config.smtpUser}>`,
+    from: `"ITP-VNU" <${config.smtpUser}>`,
     to: emails,
     subject: data.subject,
     html,
