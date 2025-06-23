@@ -7,6 +7,7 @@ import { Post } from "../decorators/handlers";
 import config from "../configuration";
 import {
   compressImageWithFFmpeg,
+  getNameFromFilename,
   handleUploadImage,
   handleUploadPDF,
 } from "../utils/file";
@@ -25,15 +26,18 @@ export default class MediaController {
   ): Promise<void> {
     try {
       const files: any = await handleUploadImage(req);
-      const filePath = files[0].filepath;
-      const fileName = files[0].newFilename;
+      const file = files[0];
+      const filePath = file.filepath;
+      const name = getNameFromFilename(file.newFilename);
 
-      const newPath = path.resolve(config.upload_image_dir, `${fileName}`);
+      // Ép đuôi file về .jpg
+      const newFilename = `${name}.jpg`;
+      const outputPath = path.resolve(config.upload_image_dir, newFilename);
 
-      await compressImageWithFFmpeg(filePath, newPath);
+      await compressImageWithFFmpeg(filePath, outputPath);
 
       res.locals.data = {
-        url: `${config.serverSite}/static/image/${fileName}`,
+        url: `${config.serverSite}/static/image/${newFilename}`,
         type: MediaType.Image,
       };
 
@@ -42,6 +46,7 @@ export default class MediaController {
       next(error);
     }
   }
+
   @Post("/upload-pdf")
   @Authorize()
   public async uploadPDF(

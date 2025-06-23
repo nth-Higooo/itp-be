@@ -580,7 +580,7 @@ export default class EmployeeController {
           position:
             employee?.position &&
             (employee?.position?.level
-              ? `${employee?.position?.level} ${employee?.position.name}`
+              ? `${employee?.position?.level}`
               : employee?.position.name),
           contracts: employee?.contracts,
           departments: employee?.departments?.map(
@@ -1486,8 +1486,8 @@ export default class EmployeeController {
           ),
           roles: [employeeRole as Role],
         });
-        user = await userRepository.save(user);
         user.createdBy = session.userId;
+        user = await userRepository.save(user);
       }
 
       // Create New Employee
@@ -1542,27 +1542,29 @@ export default class EmployeeController {
         await employeeChildrenRepository.save(childrenData);
         employee.children = [...childrenData];
       }
-      if (recommendedRoleIds) {
+      if (recommendedRoleIds && Array.isArray(recommendedRoleIds)) {
         const adminRole: Role | null = await roleRepository.findOne({
           relations: ["users"],
           where: { name: "Administrator" },
         });
 
-        const admins: User[] | undefined = adminRole?.users;
+        const admins: User[] = adminRole?.users ?? [];
 
-        const urlSetRole = `${config.clientSite}/users/${
-          user.id
-        }?roles=${recommendedRoleIds.join("|")}`;
+        if (admins.length > 0) {
+          const urlSetRole = `${config.clientSite}/users/${
+            user.id
+          }?roles=${recommendedRoleIds.join("|")}`;
 
-        sendMail({
-          nodeMailer,
-          emails: admins!.map((admin: User) => admin.email).join(","),
-          template: "RecommendedRoles",
-          data: {
-            subject: "[ITP-VNU] Set recommended roles for employee",
-            urlSetRole,
-          },
-        });
+          sendMail({
+            nodeMailer,
+            emails: admins.map((admin: User) => admin.email).join(","),
+            template: "RecommendedRoles",
+            data: {
+              subject: "[ITP-VNU] Set recommended roles for employee",
+              urlSetRole,
+            },
+          });
+        }
       }
 
       res.locals.message =

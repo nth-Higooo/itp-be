@@ -301,7 +301,7 @@ export default class AuthController {
         emails: user.email,
         template: "ForgotPassword",
         data: {
-          subject: "[ERP] A request change password",
+          subject: "[ITPHRMS] A request change password",
           email: user.email,
           urlReset,
         },
