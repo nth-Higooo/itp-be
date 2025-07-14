@@ -82,7 +82,7 @@ export default class PositionController {
               (subPosition: Position) => {
                 return {
                   ...omit(subPosition, ["level", "salary"]),
-                  name: subPosition.level + " " + parentPositionName,
+                  name: subPosition.level,
                   ...(canViewSalary && {
                     salary:
                       subPosition.salary && decryptSalary(subPosition.salary),
